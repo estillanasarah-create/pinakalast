@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <link rel="stylesheet" href="MAinstyle.css">
+    <link rel="stylesheet" href="theme-fixes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar: application navigation and logout -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-circle">
+                    <img src="c:\Users\Sarah\OneDrive\Pictures\inventorylogo.jpg" alt="Stock Master Logo" class="logo-image">
+                </div>
+                <h3>Inventory System</h3>
+            </div>
+            
+            <nav class="nav-menu">
+                
+                <a href="#dashboard" class="nav-link active" data-section="dashboard">
+                    <i class="fas fa-th-large"></i> Dashboard
+                </a>
+                <a href="#stock-list" class="nav-link" data-section="stock-list">
+                    <i class="fas fa-boxes"></i> Stock List
+                </a>
+                <a href="#reports" class="nav-link" data-section="reports">
+                    <i class="fas fa-chart-line"></i> Reports
+                </a>
+                <a href="#suppliers" class="nav-link" data-section="suppliers">
+                    <i class="fas fa-truck"></i> Suppliers
+                </a>
+                <a href="#POS" class="nav-link" data-section="POS">
+                    <i class="fas fa-th-large"></i> Sales & POS
+                </a>
+                <a href="#credit-sales" class="nav-link" data-section="credit-sales">
+                    <i class="fas fa-credit-card"></i> Credit Sales
+                </a>
+                <a href="#returns" class="nav-link" data-section="returns">
+                    <i class="fas fa-undo-alt"></i> Returns
+                </a>
+                <a href="#inventory" class="nav-link" data-section="inventory">
+                    <i class="fas fa-boxes"></i> Inventory
+                </a>
+                <a href="#receiving" class="nav-link" data-section="receiving">
+                    <i class="fas fa-truck-loading"></i> Receiving
+                </a>
+                <a href="#settings" class="nav-link" data-section="settings">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn" onclick="handleLogout(event)">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content area: pages and dashboard panels -->
+        <main class="content-area">
+            <!-- Alert Banner (injected by JS) -->
+            <div id="alert-banner-container"></div>
+
+            <header class="top-bar">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="global-search" placeholder="Search system...">
+                    <div class="search-results-dropdown" id="search-results"></div>
+                </div>
+                <div class="admin-profile">
+                    <!-- Notification Bell -->
+                    <div class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="View alerts">
+                        <i class="fas fa-bell"></i>
+                        <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+                    </div>
+                    <div class="notif-panel" id="notif-panel" style="display:none">
+                        <div class="notif-panel-header">
+                            <strong>Alerts</strong>
+                            <button onclick="clearAllNotifs()" class="notif-clear-btn">Clear all</button>
+                        </div>
+                        <ul id="notif-list" class="notif-list"></ul>
+                    </div>
+                    <span id="admin-display-name"></span>
+                    <div class="avatar"></div>
+                </div>
+            </header>
+
+            
+
+            <section id="dashboard" class="page-section active">
+                <h1>Dashboard Overview</h1>
+                <!-- Low Stock Alert Banner on Dashboard -->
+                <div id="dashboard-alert" class="dashboard-alert-box" style="display:none"></div>
+                <!-- Returns Alert Banner on Dashboard -->
+                <div id="dashboard-returns-alert" class="dashboard-alert-box" style="display:none"></div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3 id="stat-total-stock">1,200</h3>
+                        <p>Total Stock</p>
+                    </div>
+                    <div class="stat-card highlighted" id="stat-low-stock-card">
+                        <h3 id="stat-low-stock">0</h3>
+                        <p>Low Stock Alerts</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>85</h3>
+                        <p>Suppliers</p>
+                    </div>
+                </div>
+
+                <!-- Return Admin Processing (moved to Dashboard) -->
+                <div id="dashboard-return-admin" class="table-card" style="margin-top:20px;">
+                    <div class="report-chart-header" style="padding:16px 18px 0">
+                        <h3>Return Admin Processing</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Order ID</th>
+                                <th>Customer Email</th>
+                                <th>Product</th>
+                                <th>Reason</th>
+                                <th>Resolution</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody">
+                            <!-- Dynamic rows will be inserted here by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Damage Log -->
+                <div id="damage-log-section" style="margin-top:32px; display:none">
+                    <h2 style="font-size:1.2rem; margin-bottom:12px;">⚠️ Damage Report Log</h2>
+                    <div class="stats-grid damage-summary-grid">
+                        <div class="stat-card">
+                            <h3 id="damage-count">0</h3>
+                            <p>Damage Entries</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="damage-total-qty">0</h3>
+                            <p>Total Damaged Quantity</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="damage-total-value">₱0.00</h3>
+                            <p>Estimated Damage Value</p>
+                        </div>
+                    </div>
+                    <div class="table-card">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Qty Damaged</th>
+                                    <th>Unit</th>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="damage-log-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="stock-list" class="page-section">
+                <div class="section-header">
+                    <h1>Stock Inventory</h1>
+                    <button class="action-btn" data-action="open-add-item">+ Add Item</button>
+                </div>
+                <div class="table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Item Name</th>
+                                <th>Category</th>
+                                <th>Qty</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-list-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="reports" class="page-section">
+                <div class="section-header">
+                    <h1>Reports</h1>
+                    <div class="report-tab-group">
+                        <button class="report-tab active" onclick="switchReport('monthly-sales', this)">
+                            <i class="fas fa-chart-bar"></i> Monthly Sales
+                        </button>
+                        <button class="report-tab" onclick="switchReport('stock-value', this)">
+                            <i class="fas fa-coins"></i> Stock Value
+                        </button>
+                        <button class="report-tab" onclick="switchReport('order-summary', this)">
+                            <i class="fas fa-file-alt"></i> Order Summary
+                        </button>
+                        <button class="report-tab" onclick="switchReport('damage-history', this)">
+                            <i class="fas fa-tools"></i> Damage History
+                        </button>
+                        <button class="report-tab" onclick="switchReport('credit-receivables', this)">
+                            <i class="fas fa-credit-card"></i> Credit Receivables
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Monthly Sales Report -->
+                <div id="report-monthly-sales" class="report-panel active">
+                    <div class="report-kpi-row" id="sales-kpi-row"></div>
+                    <div class="report-chart-card">
+                        <div class="report-chart-header">
+                            <h3>Monthly Revenue — 2025</h3>
+                            <select id="sales-month-filter" onchange="renderSalesChart()" class="report-select">
+                                <option value="all">All Months</option>
+                                <option value="0">January</option>
+                                <option value="1">February</option>
+                                <option value="2">March</option>
+                                <option value="3">April</option>
+                                <option value="4">May</option>
+                                <option value="5">June</option>
+                            </select>
+                        </div>
+                        <div class="bar-chart-wrap">
+                            <canvas id="sales-bar-chart" class="bar-chart-canvas"></canvas>
+                            <div id="sales-bar-labels" class="bar-chart-labels"></div>
+                        </div>
+                    </div>
+                    <div class="table-card" style="margin-top:20px">
+                        <table>
+                            <thead><tr>
+                                <th>Month</th><th>Units Sold</th><th>Revenue</th><th>Cost</th><th>Gross Profit</th><th>Trend</th>
+                            </tr></thead>
+                            <tbody id="sales-report-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Stock Value Report -->
+                <div id="report-stock-value" class="report-panel">
+                    <div class="report-kpi-row" id="stock-kpi-row"></div>
+                    <div class="report-chart-card">
+                        <div class="report-chart-header">
+                            <h3>Inventory Value by Category</h3>
+                        </div>
+                        <div id="stock-donut-wrap" class="donut-wrap">
+                            <canvas id="stock-donut" width="220" height="220"></canvas>
+                            <div id="donut-legend" class="donut-legend"></div>
+                        </div>
+                    </div>
+                    <div class="table-card" style="margin-top:20px">
+                        <table>
+                            <thead><tr>
+                                <th>Item</th><th>Category</th><th>Stock</th><th>Unit Cost</th><th>Unit Price</th><th>Stock Value</th><th>Potential Revenue</th>
+                            </tr></thead>
+                            <tbody id="stock-value-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Order Summary Report -->
+                <div id="report-order-summary" class="report-panel">
+                    <div class="report-kpi-row" id="order-kpi-row"></div>
+                    <div class="table-card" style="margin-top:20px">
+                        <div class="report-chart-header" style="padding:16px 18px 0">
+                            <h3>Recent Purchase Orders</h3>
+                            <select id="order-status-filter" onchange="renderOrderSummary()" class="report-select">
+                                <option value="all">All Status</option>
+                                <option value="Received">Received</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <table>
+                            <thead><tr>
+                                <th>PO Number</th><th>Item</th><th>Supplier</th><th>Qty</th><th>Total Cost</th><th>Date</th><th>Status</th>
+                            </tr></thead>
+                            <tbody id="order-summary-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Damage History Report -->
+                <div id="report-damage-history" class="report-panel">
+                    <div class="report-kpi-row" id="damage-kpi-row"></div>
+                    <div class="credit-admin-panel" style="margin-top:20px;">
+                        <div class="credit-admin-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                            <div>
+                                <h3>Damage History</h3>
+                                <p class="text-sm text-gray-600">Track every damage report and see total quantities and estimated loss.</p>
+                            </div>
+                            <div class="credit-admin-summary" style="display:flex;gap:14px;flex-wrap:wrap;">
+                                <div class="credit-summary-card"><strong id="damageTotalEntries">0</strong><span>Damage Reports</span></div>
+                                <div class="credit-summary-card"><strong id="damageTotalQty">0</strong><span>Total Damaged Qty</span></div>
+                                <div class="credit-summary-card"><strong id="damageTotalValue">₱0.00</strong><span>Estimated Loss</span></div>
+                            </div>
+                        </div>
+                        <div class="credit-admin-table-wrap" style="margin-top:16px;overflow-x:auto;">
+                            <table class="credit-admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Qty</th>
+                                        <th>Unit</th>
+                                        <th>Note</th>
+                                        <th>Reported</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="damage-history-body">
+                                    <tr><td colspan="6" style="text-align:center;color:#999;padding:16px">No damage reports yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Receivables Report -->
+                <div id="report-credit-receivables" class="report-panel">
+                    <div class="report-kpi-row" id="credit-receivables-kpi-row"></div>
+                    <div class="credit-admin-panel" style="margin-top:20px;">
+                        <div class="credit-admin-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                            <div>
+                                <h3>Credit Receivable Accounts</h3>
+                                <p class="text-sm text-gray-600">Manage outstanding customer debts and record cash payments here.</p>
+                            </div>
+                            <div class="credit-admin-summary" style="display:flex;gap:14px;flex-wrap:wrap;">
+                                <div class="credit-summary-card"><strong id="creditOpenCount">0</strong><span>Open Credits</span></div>
+                                <div class="credit-summary-card"><strong id="creditTotalAR">₱0.00</strong><span>Total Receivable</span></div>
+                            </div>
+                        </div>
+                        <div class="credit-admin-table-wrap" style="margin-top:16px;overflow-x:auto;">
+                            <table class="credit-admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Customer</th>
+                                        <th>Item</th>
+                                        <th>Qty</th>
+                                        <th>Due Date</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="credit-admin-table">
+                                    <tr><td colspan="7" style="text-align:center;color:#999;padding:16px">No outstanding credit sales yet.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="suppliers" class="page-section">
+                <div class="section-header">
+                    <h1>Suppliers</h1>
+                    <button class="action-btn" data-action="open-add-supplier">+ Add Supplier</button>
+                </div>
+                <div class="table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Supplier</th>
+                                <th>Contact</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>sammuel</td>
+                                <td>097646353</td>
+                                <td>hardware</td>
+                                <td><span class="badge in-stock">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="POS" class="page-section">
+                <h1>Sales & point of sale</h1>
+                <div style="display: flex;gap: 10px;margin-bottom: 10px;position:relative">
+                    <div style="flex:1;position:relative;">
+                        <input type="text" id="search-item" placeholder="Search products..." class="search-input" autocomplete="off">
+                        <div id="item-suggestions" class="suggestions-dropdown"></div>
+                    </div>
+                    <input type="number" id="search-item-qty" placeholder="Qty" style="flex: 0.5;">
+                    <select id="payment-type">
+                        <option value="cash">Cash</option>
+                        <option value="card">Card</option>
+                        <option value="mobile">Mobile Pay</option>
+                    </select>
+                    <button class="btn-action" onclick="processSales()">Process Sale</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Payment Type</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-log">
+                        
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="inventory" class="page-section">
+                <h1>Stock Inquiry & Damage Report</h1>
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Item Name</th>
+                            <th>Current Stock</th>
+                            <th>Stock Level</th>
+                            <th>Unit</th>
+                            <th class="inventory-action-col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-list">
+                        
+                    </tbody>
+                </table>
+
+                <div class="inventory-damage-panel">
+                    <div class="damage-report-card">
+                        <div class="damage-report-header">
+                            <h2>Damage Report</h2>
+                            <p>Record damaged stock directly from inventory and track recent damage history.</p>
+                        </div>
+                        <div class="damage-report-fields">
+                            <div class="form-group">
+                                <label for="damageProductSelect">Product</label>
+                                <select id="damageProductSelect" class="form-control">
+                                    <option value="">-- Select damaged item --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="damageQty">Damage Quantity</label>
+                                <input type="number" id="damageQty" min="1" value="1" class="form-control" placeholder="Enter quantity">
+                            </div>
+                            <div class="form-group">
+                                <label for="damageNote">Reason / Notes</label>
+                                <input type="text" id="damageNote" class="form-control" placeholder="Broken, expired, missing packaging...">
+                            </div>
+                        </div>
+                        <button type="button" class="action-btn damage-report-btn" onclick="submitDamageReport()">
+                            <i class="fas fa-tools"></i> Report Damage
+                        </button>
+                    </div>
+                </div>
+            </section>
+                <div class="container">
+    <!-- CUSTOMER PORTAL -->
+            <section id="returns" class="page-section">
+        <div class="section-header">
+            <h1><i class="fas fa-undo-alt"></i> Returns Management</h1>
+            <button type="button" class="action-btn button-report" onclick="openReturnsReport()"><i class="fas fa-chart-line"></i> View Return Reports</button>
+        </div>
+
+        <form id="returnForm" class="space-y-6">
+            <!-- Return Request Form -->
+            <div class="border-2 border-orange-600 rounded-lg p-6 bg-white shadow-sm space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Order ID:</label>
+                    <input type="text" id="orderId" placeholder="e.g., ORD12345" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500" required>
+                </div>
+                
+                <div style="position:relative;">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Select Product:</label>
+                    <div style="position:relative;">
+                        <input type="text" id="returnProductSearch" placeholder="Search by product name or code..." class="search-input" autocomplete="off">
+                        <div id="returnProductSuggestions" class="suggestions-dropdown"></div>
+                    </div>
+                    <div id="returnProductInfo" style="margin-top:12px;padding:14px;background:#fff8f4;border-radius:10px;border:1px solid #fed7aa;display:none;animation:slideIn 0.3s ease;">
+                        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                            <div style="flex:1;">
+                                <strong id="returnProductName" style="color:#92400e;font-size:1rem;"></strong>
+                                <div id="returnProductDetails" style="color:#b45309;margin-top:6px;font-size:0.9rem;line-height:1.5;"></div>
+                            </div>
+                            <button type="button" onclick="clearReturnProductSelection()" style="background:none;border:none;color:#92400e;font-size:1.2rem;cursor:pointer;padding:0;" title="Clear selection">×</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">Email Address:</label>
+                    <input type="email" id="returnCustomerEmail" placeholder="you@example.com" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500" required>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Reason for Return:</label>
+                        <select id="reason" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500" required>
+                            <option value="">Select a reason...</option>
+                            <option value="Wrong Size">Wrong Size</option>
+                            <option value="Damaged/Defective">Damaged / Defective</option>
+                            <option value="Changed Mind">Changed My Mind</option>
+                            <option value="Not as Pictured">Not as Pictured</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Preferred Resolution:</label>
+                        <select id="resolution" onchange="toggleExchangeFields()" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500" required>
+                            <option value="Refund">Original Payment Refund</option>
+                            <option value="Store Credit">Store Credit (Instant)</option>
+                            <option value="Exchange">Item Exchange</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="exchangeFields" class="grid grid-cols-2 gap-4" style="display:none; margin-top:12px;">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Exchange Quantity:</label>
+                        <input type="number" id="exchangeQty" min="1" value="1" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500" placeholder="Qty to exchange">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Exchange Product:</label>
+                        <select id="exchangeProductSelect" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500">
+                            <option value="">-- Select item for exchange --</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="exchangeHint" class="text-sm text-gray-500" style="display:none;margin-bottom:12px;">
+                    Select the item and quantity you want to exchange for the returned product.
+                </div>
+
+                <button type="submit" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 px-6 rounded shadow-md text-lg transition tracking-wide">
+                    <i class="fas fa-paper-plane"></i> Submit Return Request
+                </button>
+            </div>
+
+            <div id="portalMessage" class="message hidden"></div>
+
+        </form>
+</div>
+
+            <section id="receiving" class="page-section">
+                <div class="section-header">
+                    <h1>Receiving & Purchase Orders</h1>
+                    <button class="action-btn" onclick="openPOModal()"><i class="fas fa-plus"></i> New PO</button>
+                </div>
+
+                <!-- PO Summary Cards -->
+                <div class="stats-grid" style="margin-bottom:24px">
+                    <div class="stat-card">
+                        <h3 id="po-total-count">0</h3>
+                        <p>Total POs</p>
+                    </div>
+                    <div class="stat-card highlighted">
+                        <h3 id="po-pending-count">0</h3>
+                        <p>Pending</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="po-received-count">0</h3>
+                        <p>Received</p>
+                    </div>
+                </div>
+
+                <div class="table-card">
+                    <table id="receiving-table">
+                        <thead>
+                            <tr>
+                                <th>PO Number</th>
+                                <th>Item</th>
+                                <th>Supplier</th>
+                                <th>Qty</th>
+                                <th>Expected Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="receiving-list"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="settings" class="page-section">
+                <div class="section-header">
+                    <h1>Settings</h1>
+                </div>
+
+                <div class="settings-layout">
+                    <!-- Settings sidebar tabs -->
+                    <nav class="settings-nav">
+                        <button class="settings-tab active" onclick="switchSettings('account', this)">
+                            <i class="fas fa-user-circle"></i> Account
+                        </button>
+                        <button class="settings-tab" onclick="switchSettings('notifications', this)">
+                            <i class="fas fa-bell"></i> Notifications
+                        </button>
+                        <button class="settings-tab" onclick="switchSettings('preferences', this)">
+                            <i class="fas fa-sliders-h"></i> Preferences
+                        </button>
+                    </nav>
+
+                    <div class="settings-content">
+                        <!-- Account Management -->
+                        <div id="settings-account" class="settings-panel active">
+                            <h2 class="settings-panel-title"><i class="fas fa-user-circle"></i> Account Management</h2>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Profile Information</h4>
+                                <div class="settings-avatar-row">
+                                    <div class="settings-avatar" id="settings-avatar-display">A</div>
+                                    <div>
+                                        <p class="settings-avatar-name" id="settings-display-name">Admin Name</p>
+                                        <p class="settings-avatar-role">Administrator</p>
+                                    </div>
+                                </div>
+                                <div class="settings-form-grid">
+                                    <div class="settings-field">
+                                        <label>First Name</label>
+                                        <input type="text" id="s-first-name" class="form-control" value="Admin" placeholder="First name">
+                                    </div>
+                                    <div class="settings-field">
+                                        <label>Last Name</label>
+                                        <input type="text" id="s-last-name" class="form-control" value="Name" placeholder="Last name">
+                                    </div>
+                                    <div class="settings-field">
+                                        <label>Email Address</label>
+                                        <input type="email" id="s-email" class="form-control" value="admin@glowberry.com" placeholder="Email">
+                                    </div>
+                                    <div class="settings-field">
+                                        <label>Phone Number</label>
+                                        <input type="text" id="s-phone" class="form-control" value="09xx-xxx-xxxx" placeholder="Phone">
+                                    </div>
+                                    <div class="settings-field settings-field-full">
+                                        <label>Company Name</label>
+                                        <input type="text" id="s-company" class="form-control" value="GlowBerry Team" placeholder="Company">
+                                    </div>
+                                </div>
+                                <button class="action-btn" onclick="saveProfile()">Save Profile</button>
+                            </div>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Change Password</h4>
+                                <div class="settings-form-grid">
+                                    <div class="settings-field settings-field-full">
+                                        <label>Current Password</label>
+                                        <div class="pass-wrapper">
+                                            <input type="password" id="s-current-pass" class="form-control" placeholder="Enter current password">
+                                            <i class="fas fa-eye toggle-password" onclick="toggleSettingsPass('s-current-pass', this)"></i>
+                                        </div>
+                                    </div>
+                                    <div class="settings-field">
+                                        <label>New Password</label>
+                                        <div class="pass-wrapper">
+                                            <input type="password" id="s-new-pass" class="form-control" placeholder="New password">
+                                            <i class="fas fa-eye toggle-password" onclick="toggleSettingsPass('s-new-pass', this)"></i>
+                                        </div>
+                                    </div>
+                                    <div class="settings-field">
+                                        <label>Confirm New Password</label>
+                                        <div class="pass-wrapper">
+                                            <input type="password" id="s-confirm-pass" class="form-control" placeholder="Confirm password">
+                                            <i class="fas fa-eye toggle-password" onclick="toggleSettingsPass('s-confirm-pass', this)"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="pass-strength-bar" class="pass-strength-bar" style="display:none">
+                                    <div id="pass-strength-fill" class="pass-strength-fill"></div>
+                                </div>
+                                <p id="pass-strength-label" style="font-size:0.8rem;color:#888;margin:4px 0 12px"></p>
+                                <button class="action-btn" onclick="changePassword()">Update Password</button>
+                            </div>
+                        </div>
+                        <!-- Notification Settings -->
+                        <div id="settings-notifications" class="settings-panel">
+                            <h2 class="settings-panel-title"><i class="fas fa-bell"></i> Notification Settings</h2>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Inventory Alerts</h4>
+                                <div class="settings-toggle-list">
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Low Stock Alert</p>
+                                            <p class="toggle-desc">Get notified when items fall below minimum level</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="notif-low-stock" checked onchange="saveNotifSettings()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Out of Stock Alert</p>
+                                            <p class="toggle-desc">Immediate alert when any item hits zero</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="notif-out-of-stock" checked onchange="saveNotifSettings()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Damage Report Alert</p>
+                                            <p class="toggle-desc">Notify when a damage report is filed</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="notif-damage" checked onchange="saveNotifSettings()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Low Stock Threshold</p>
+                                            <p class="toggle-desc">Alert when stock drops below this many units globally</p>
+                                        </div>
+                                        <input type="number" id="notif-threshold" class="form-control" style="width:80px;text-align:center" value="20" min="1" onchange="saveNotifSettings()">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Reminders</h4>
+                                <div class="settings-toggle-list">
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Daily Inventory Summary</p>
+                                            <p class="toggle-desc">Receive a summary every day at set time</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="notif-daily-summary" onchange="saveNotifSettings()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Weekly Report Email</p>
+                                            <p class="toggle-desc">Automated report sent every Monday</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="notif-weekly-report" checked onchange="saveNotifSettings()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">PO Arrival Reminder</p>
+                                            <p class="toggle-desc">Alert one day before expected PO arrival</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="notif-po-reminder" checked onchange="saveNotifSettings()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Report Emails</h4>
+                                <div class="settings-field" style="margin-bottom:12px">
+                                    <label>Send reports to</label>
+                                    <input type="email" id="notif-email" class="form-control" placeholder="admin@glowberry.com">
+                                </div>
+                                <div class="settings-field">
+                                    <label>CC (comma-separated)</label>
+                                    <input type="text" id="notif-cc" class="form-control" placeholder="manager@glowberry.com, owner@glowberry.com">
+                                </div>
+                                <button class="action-btn" style="margin-top:12px" onclick="saveNotifSettings()">Save Notification Settings</button>
+                                <div id="notif-saved-msg" class="settings-save-msg" style="display:none">
+                                    <i class="fas fa-check-circle"></i> Settings saved!
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preferences -->
+                        <div id="settings-preferences" class="settings-panel">
+                            <h2 class="settings-panel-title"><i class="fas fa-sliders-h"></i> System Preferences</h2>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Display</h4>
+                                <div class="settings-toggle-list">
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Currency Symbol</p>
+                                            <p class="toggle-desc">Symbol shown on all monetary values</p>
+                                        </div>
+                                        <select id="pref-currency" class="report-select" onchange="savePrefs()">
+                                            <option value="₱">₱ Philippine Peso</option>
+                                            <option value="$">$ US Dollar</option>
+                                            <option value="€">€ Euro</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Date Format</p>
+                                            <p class="toggle-desc">Format used across reports and tables</p>
+                                        </div>
+                                        <select id="pref-date-format" class="report-select" onchange="savePrefs()">
+                                            <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                            <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                            <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Items Per Page</p>
+                                            <p class="toggle-desc">Rows shown in inventory and report tables</p>
+                                        </div>
+                                        <select id="pref-per-page" class="report-select" onchange="savePrefs()">
+                                            <option value="10">10</option>
+                                            <option value="25" selected>25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Dark Mode</p>
+                                            <p class="toggle-desc">Switch the dashboard into a low-light theme</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="pref-dark-mode" onchange="savePrefs()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <h4 class="settings-card-title">Inventory Defaults</h4>
+                                <div class="settings-toggle-list">
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Default Low Stock Level</p>
+                                            <p class="toggle-desc">Applied to new items unless overridden</p>
+                                        </div>
+                                        <input type="number" id="pref-min-stock" class="form-control" style="width:80px;text-align:center" value="15" min="1" onchange="savePrefs()">
+                                    </div>
+                                    <div class="settings-toggle-row">
+                                        <div>
+                                            <p class="toggle-label">Auto-generate PO Numbers</p>
+                                            <p class="toggle-desc">Automatically assign PO numbers on creation</p>
+                                        </div>
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="pref-auto-po" checked onchange="savePrefs()">
+                                            <span class="toggle-track-el"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="pref-saved-msg" class="settings-save-msg" style="display:none">
+                                    <i class="fas fa-check-circle"></i> Preferences saved!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="credit-sales" class="page-section">
+                <h1>Credit Sales</h1>
+                <form id="creditSalesForm" class="space-y-6">
+                    <div class="border-2 border-green-600 rounded-lg p-6 bg-white shadow-sm space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Select Product:</label>
+                            <select id="productSelect" onchange="handleProductChange()" class="w-full border border-gray-300 rounded p-2 bg-gray-50 focus:outline-blue-500" required>
+                                <option value="">-- Choose a Product --</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Selling Price:</label>
+                            <input type="text" id="sellingPrice" class="w-full border border-gray-300 rounded p-2 bg-gray-100 cursor-not-allowed" readonly>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Stock Available:</label>
+                            <input type="text" id="stockAvailable" class="w-full border border-gray-300 rounded p-2 bg-gray-100 cursor-not-allowed" readonly>
+                        </div>
+
+                        <div class="flex items-end space-x-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Quantity:</label>
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <button type="button" onclick="decrementQty()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded" title="Decrease quantity">−</button>
+                                    <input type="number" id="quantity" value="1" min="1" class="w-20 border border-gray-300 rounded p-2 text-center focus:outline-blue-500" required>
+                                    <button type="button" onclick="incrementQty()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-3 rounded" title="Increase quantity">+</button>
+                                </div>
+                            </div>
+                            <button type="button" onclick="addToCartItem()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded shadow transition">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="credit-cart-container" style="margin-top:12px">
+                        <h3 class="text-lg font-semibold text-gray-800">Staged Items</h3>
+                        <div id="credit-cart" style="margin-top:8px"></div>
+                    </div>
+
+                    <div id="credit-cart-actions" class="credit-cart-actions" style="margin-top:14px; display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+                        <div class="credit-cart-summary" style="color:#374151;font-size:0.95rem;">
+                            <strong id="creditCartCount">0</strong> staged items · <strong id="creditCartSelectedCount">0</strong> selected
+                        </div>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button type="button" onclick="toggleCreditCartSelectionMode()" class="action-btn">Select Staged Items</button>
+                            <button type="button" onclick="confirmCreditSelection()" class="action-btn action-btn-secondary">Confirm Selection</button>
+                        </div>
+                    </div>
+
+                    <h2 class="text-xl font-bold text-gray-800 mt-8">Customer Details</h2>
+                    <div class="border border-gray-300 rounded-lg p-6 bg-white shadow-sm space-y-4">
+                        <div class="credit-personal-info-panel">
+                            <div class="credit-info-header">
+                                <h3>Personal Info for Credit (Utang)</h3>
+                                <p>Collect customer contact and due date details for the credit sale.</p>
+                            </div>
+                            <div class="credit-personal-info-grid">
+                                <div class="credit-personal-field">
+                                    <label>Customer Name</label>
+                                    <input type="text" id="customerName" placeholder="Enter customer name" class="form-control" required>
+                                </div>
+                                <div class="credit-personal-field">
+                                    <label>Customer Phone</label>
+                                    <input type="tel" id="customerPhone" placeholder="Enter customer phone" class="form-control" required>
+                                </div>
+                                <div class="credit-personal-field">
+                                    <label>Customer Address</label>
+                                    <input type="text" id="customerAddress" placeholder="Enter customer address" class="form-control">
+                                </div>
+                                <div class="credit-personal-field">
+                                    <label>Customer Email</label>
+                                    <input type="email" id="customerEmail" placeholder="Enter customer email" class="form-control">
+                                </div>
+                                <div class="credit-personal-field">
+                                    <label>Due Date</label>
+                                    <input type="date" id="creditDueDate" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                            <button type="button" onclick="addCustomerToList()" class="action-btn">Save Customer</button>
+                            <small style="color:#666;margin-top:6px">Save this customer profile for future credit purchases.</small>
+                        </div>
+                        <div id="customers-list" style="margin-top:12px"></div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-6 rounded shadow-md text-lg transition tracking-wide">
+                        PROCESS CREDIT SALE TRANSACTION
+                    </button>
+                </form>
+            </section>
+        </main>
+
+        <div class="modal-overlay" id="item-modal" aria-hidden="true">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>Add New Item</h2>
+                    <button type="button" class="modal-close">×</button>
+                </div>
+                <form id="add-item-form">
+                    <div class="form-group">
+                        <label for="item-code">Item Code</label>
+                        <input id="item-code" type="text" class="form-control" placeholder="#BT-02" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-name">Item Name</label>
+                        <input id="item-name" type="text" class="form-control" placeholder="Packaging Tape" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-category">Category</label>
+                        <input id="item-category" type="text" class="form-control" placeholder="Supplies" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-qty">Quantity</label>
+                        <input id="item-qty" type="number" class="form-control" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="item-status">Status</label>
+                        <select id="item-status" class="form-control" required>
+                            <option value="Good">Good</option>
+                            <option value="Low">Low</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="action-btn modal-close">Cancel</button>
+                        <button type="submit" class="action-btn">Save Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="supplier-modal" aria-hidden="true">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>Add Supplier</h2>
+                    <button type="button" class="modal-close">×</button>
+                </div>
+                <form id="add-supplier-form">
+                    <div class="form-group">
+                        <label for="supplier-name">Supplier Name</label>
+                        <input id="supplier-name" type="text" class="form-control" placeholder="GlowBerry Packaging" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier-contact">Contact</label>
+                        <input id="supplier-contact" type="text" class="form-control" placeholder="012-345-6789" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier-category">Category</label>
+                        <input id="supplier-category" type="text" class="form-control" placeholder="Packaging" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="supplier-status">Status</label>
+                        <select id="supplier-status" class="form-control" required>
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="action-btn modal-close">Cancel</button>
+                        <button type="submit" class="action-btn">Save Supplier</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Purchase Order Modal -->
+        <div class="modal-overlay" id="po-modal" aria-hidden="true">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>Create Purchase Order</h2>
+                    <button type="button" class="modal-close" onclick="closePOModal()">×</button>
+                </div>
+                <form id="add-po-form" onsubmit="submitPO(event)">
+                    <div class="form-group">
+                        <label for="po-item">Item</label>
+                        <select id="po-item" class="form-control" required>
+                            <option value="">— Select Item —</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="po-supplier">Supplier</label>
+                        <input id="po-supplier" type="text" class="form-control" placeholder="Supplier name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="po-qty">Quantity</label>
+                        <input id="po-qty" type="number" class="form-control" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="po-date">Expected Delivery Date</label>
+                        <input id="po-date" type="date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="po-status">Status</label>
+                        <select id="po-status" class="form-control" required>
+                            <option value="Pending">Pending</option>
+                            <option value="Received">Received</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="action-btn" onclick="closePOModal()">Cancel</button>
+                        <button type="submit" class="action-btn">Create PO</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- App script: contains page logic, auth check, UI handlers and data persistence. -->
+    <script src="Mainscript.js"></script>
+</body>
+</html>

@@ -1,0 +1,400 @@
+/* theme-fixes.css — Comprehensive color & text fixes for hardware theme */
+
+/* ===== GLOBAL TEXT & COLOR FIXES ===== */
+body,
+.content-area,
+.page-section,
+.section-header,
+h1, h2, h3, h4, h5, h6,
+p, label, span, strong {
+    color: var(--text-primary);
+}
+
+/* Fix neutral grays to theme colors */
+.search-container i,
+.toggle-desc {
+    color: var(--text-secondary) !important;
+}
+
+/* ===== BUTTON & LINK FIXES ===== */
+.action-btn,
+.btn-action {
+    background: var(--main-navy);
+    color: #fff;
+    border-color: var(--main-navy);
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.action-btn:hover,
+.btn-action:hover {
+    background: #0952a0;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(11, 102, 195, 0.20);
+}
+
+/* ===== FORM CONTROLS ===== */
+input, select, textarea {
+    color: var(--text-primary) !important;
+    border-color: var(--light-azure) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--main-navy) !important;
+    box-shadow: 0 0 0 3px rgba(11, 102, 195, 0.14) !important;
+}
+
+/* ===== HEADINGS ===== */
+.section-header h1,
+#credit-sales h1 {
+    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 1.9rem;
+}
+
+#dashboard > h1,
+#dashboard h1,
+#POS h1,
+#returns h1,
+#inventory h1,
+#inventory .damage-report-header h2 {
+    color: #000 !important;
+}
+
+.settings-panel-title,
+.settings-card-title {
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+/* ===== TABLE STYLING ===== */
+table th {
+    background: var(--side-bg);
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+table td {
+    color: var(--text-primary);
+}
+
+.badge {
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+/* ===== STAT CARDS ===== */
+.stat-card {
+    background: var(--side-bg);
+    border-color: var(--light-azure);
+    color: var(--text-primary);
+}
+
+.stat-card h3 {
+    color: var(--main-navy);
+    font-weight: 800;
+}
+
+.stat-card.highlighted {
+    background: var(--main-navy);
+    color: #fff;
+}
+
+.stat-card.highlighted h3 {
+    color: #fff;
+}
+
+/* ===== SEARCH & DROPDOWNS ===== */
+.search-result-title {
+    color: var(--main-navy);
+    font-weight: 700;
+}
+
+.search-result-text {
+    color: var(--text-secondary);
+}
+
+.suggestions-dropdown button {
+    color: var(--text-primary);
+}
+
+.suggestions-dropdown button:hover {
+    background: rgba(11, 102, 195, 0.08);
+}
+
+/* ===== SETTINGS CARDS ===== */
+.settings-card {
+    background: linear-gradient(to right, var(--side-bg), rgba(243, 248, 255, 0.5));
+    border-color: var(--light-azure);
+}
+
+.settings-avatar {
+    background: #fff;
+    color: var(--main-navy);
+    border-color: var(--light-azure);
+    font-weight: 800;
+}
+
+.settings-avatar-name {
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+.settings-avatar-role {
+    color: var(--text-secondary);
+}
+
+/* ===== TOGGLE SWITCHES ===== */
+.toggle-label {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.toggle-switch input:checked + .toggle-track-el {
+    background: var(--main-navy);
+}
+
+/* ===== MODALS ===== */
+.modal-card {
+    background: #fff;
+    color: var(--text-primary);
+}
+
+.modal-header h2 {
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+/* ===== CREDIT SALES ===== */
+.credit-info-header h3 {
+    color: var(--main-navy);
+    font-weight: 800;
+}
+
+.credit-info-header p {
+    color: var(--text-secondary);
+}
+
+.credit-personal-field label {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+/* ===== NOTIFICATION PANEL ===== */
+.notif-panel-header {
+    color: var(--text-primary);
+}
+
+.notif-item {
+    color: var(--text-primary);
+}
+
+.notif-item small {
+    color: var(--text-secondary);
+}
+
+/* ===== NAV LINKS ===== */
+.nav-link {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 1.03rem;
+    transition: all 0.25s ease;
+}
+
+.nav-link i {
+    font-size: 1.25rem;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    background: var(--main-navy);
+    color: #fff;
+}
+
+/* ===== QUANTITY INPUT SIZE FIX ===== */
+#quantity {
+    font-size: 1.1rem !important;
+    padding: 10px 14px !important;
+    height: 42px !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    min-width: 100px !important;
+    text-align: center !important;
+    border: 2px solid #e0e7ff !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+#quantity:focus {
+    border-color: #0b66c3 !important;
+    box-shadow: 0 0 0 3px rgba(11, 102, 195, 0.14) !important;
+}
+
+/* ===== POS QUANTITY INPUT SIZE FIX ===== */
+#search-item-qty {
+    flex: 0 0 120px !important;
+    min-width: 120px !important;
+    max-width: 180px !important;
+    padding: 10px 12px !important;
+    font-size: 1rem !important;
+    box-sizing: border-box !important;
+}
+
+#search-item {
+    max-width: 320px !important;
+    min-width: 240px !important;
+    box-sizing: border-box !important;
+}
+
+#payment-type {
+    flex: 0 0 150px !important;
+    min-width: 140px !important;
+    max-width: 170px !important;
+    padding: 10px 12px !important;
+    box-sizing: border-box !important;
+}
+
+/* ===== INVENTORY ACTION COLUMN HIDE ===== */
+#inventory-table .inventory-action-col,
+#inventory-table tbody td:last-child {
+    display: none !important;
+}
+
+/* ===== RETURNS PORTAL SUBMIT BUTTON STYLING ===== */
+#returnForm button[type="submit"] {
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    padding: 14px 28px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3) !important;
+    transition: all 0.3s ease !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+#returnForm button[type="submit"]:hover {
+    background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%) !important;
+    box-shadow: 0 6px 16px rgba(30, 64, 175, 0.4) !important;
+    transform: translateY(-2px) !important;
+}
+
+#returnForm button[type="submit"]:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 8px rgba(30, 64, 175, 0.3) !important;
+}
+
+/* ===== REPORTS KPI TEXT COLOR ===== */
+.report-kpi-row .stat-card p {
+    color: #1e40af !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+}
+
+/* ===== REPORT TAB BUTTON STYLING ===== */
+.report-tab {
+    background: var(--light-gray, #f5f5f5) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--light-azure, #e0e7ff) !important;
+    font-weight: 600 !important;
+    padding: 10px 16px !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 0.95rem !important;
+}
+
+.report-tab:hover {
+    background: var(--main-navy, #0b66c3) !important;
+    color: #fff !important;
+    border-color: var(--main-navy, #0b66c3) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 20px rgba(11, 102, 195, 0.20) !important;
+}
+
+.report-tab.active {
+    background: var(--main-navy, #0b66c3) !important;
+    color: #fff !important;
+    border-color: var(--main-navy, #0b66c3) !important;
+}
+
+.report-tab.active:hover {
+    background: #0952a0 !important;
+    border-color: #0952a0 !important;
+}
+
+/* ===== SETTINGS PAGE TEXT OVERRIDE ===== */
+/* Make Settings pages (Account, Notifications, Preferences) text black */
+#settings .settings-content,
+#settings .settings-content .settings-panel,
+#settings .settings-content .settings-card,
+#settings .settings-content .settings-card * {
+    color: #000 !important;
+}
+
+/* ===== HIDE RETURNS REPORT METRICS ===== */
+
+/* ===== SETTINGS ACTION BUTTON SPACING ===== */
+/* Match spacing used for the Update Password button */
+.settings-action-spacing {
+    margin-top: 12px !important;
+}
+
+/* Small bottom gap for settings action buttons (e.g., Save Profile) */
+.settings-action-gap {
+    margin-bottom: 12px !important;
+}
+
+/* Dashboard returns admin card styling */
+#dashboard-return-admin {
+    margin-top: 20px;
+}
+
+#dashboard-return-admin table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#dashboard-return-admin table thead th {
+    text-align: left;
+    padding: 10px;
+    background: var(--side-bg, #f8fafc);
+}
+
+#dashboard-return-admin table tbody td {
+    padding: 10px;
+    border-top: 1px solid #eef2f7;
+}
+
+/* end theme-fixes.css */
+
+/* ===== ADD ITEM MODAL BUTTONS & TEXT ===== */
+/* Ensure Cancel button and modal text match the Save Item button sizing */
+#item-modal .modal-actions .action-btn {
+    font-size: 1rem !important;
+    padding: 12px 20px !important;
+    min-width: 120px !important;
+}
+
+#item-modal .modal-card {
+    font-size: 1rem !important;
+}
+
+/* ===== ADD SUPPLIER MODAL BUTTONS & TEXT ===== */
+/* Ensure Cancel button and modal text match the Save Supplier button sizing */
+#supplier-modal .modal-actions .action-btn {
+    font-size: 1rem !important;
+    padding: 12px 20px !important;
+    min-width: 120px !important;
+}
+
+#supplier-modal .modal-card {
+    font-size: 1rem !important;
+}

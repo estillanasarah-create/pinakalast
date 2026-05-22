@@ -1,0 +1,137 @@
+:root {
+    --primary-dark: #2c3e50;
+    --accent-blue: #3498db;
+    --bg-light: #f4f7f6;
+    --white: #ffffff;
+    --shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #0b66c3;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+}
+
+/* Hide the flex-direction: row to focus on the center */
+.main-container {
+    background: var(--white);
+    width: 100%;
+    max-width: 420px; /* Width ng login card */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+/* Hide the side panel for a simple look */
+.graphic-side {
+    display: none;
+}
+
+/* Logo handling */
+.logo-area {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.main-logo {
+    width: 80px; /* Adjust size ng logo */
+    height: auto;
+}
+
+/* Form Styles */
+.form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h1 {
+    font-size: 1.5rem;
+    color: var(--primary-dark);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #f9f9f9;
+    transition: 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--accent-blue);
+    background: #fff;
+    outline: none;
+}
+
+/* Button Style */
+.btn-main {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-dark);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-main:hover {
+    background-color: var(--accent-blue);
+}
+
+.help-link,
+.resend-link {
+    display: inline-block;
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.help-link:hover,
+.resend-link:hover,
+.footer-link a:hover {
+    text-decoration: underline;
+}
+
+/* Switcher Links */
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.footer-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.85rem;
+}
+
+.footer-link a {
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
